@@ -29,9 +29,13 @@
  
    @Author Modified by Addison Sears-Collins
    @Date   April 17, 2019
+   
+   @Author Modified by Douglas Eucken
+   @Date   May 7, 2021
 */
  
 /* Set the delay between fresh samples */
+// deucken1 - changed delay from 100 to 500 ms for stability
 #define BNO055_SAMPLERATE_DELAY_MS (500)
  
 Adafruit_BNO055 bno = Adafruit_BNO055(55);

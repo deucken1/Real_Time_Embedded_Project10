@@ -2,6 +2,8 @@ import smbus
 import time
 # Created by Addison Sears-Collins
 # April 17, 2019
+# Modified by Douglas Eucken
+# May 7, 2021
 # Open a new file to log the IMU data
 f = open("imu_data.txt", "w")
  
@@ -13,7 +15,13 @@ SLAVE_ADDRESS = 0x04
  
 def request_reading():
   # Read a block of 12 bytes starting at SLAVE_ADDRESS, offset 0
-  reading = bus.read_i2c_block_data(SLAVE_ADDRESS, 0, 12)
+  # deucken1 - Inserted try/except to catch bus timing errors that would kill program
+  while True:
+   try:
+    reading = bus.read_i2c_block_data(SLAVE_ADDRESS, 0, 12)
+    break
+   except IOError:
+    print("Caught IO Error...")
  
   # Extract the IMU reading data
   if reading[0] < 1:
@@ -53,10 +61,12 @@ def request_reading():
     f.close()
  
 # Request IMU data every 5 seconds from the Arduino
+# deucken1 updated from 5 to 0.5 seconds
 while True:
   # Used for testing: command = raw_input("Enter command: l - toggle LED, r - read IMU ")
     # if command == 'l' :
     #   bus.write_byte(SLAVE_ADDRESS, ord('l'))
     # elif command == 'r' :
   request_reading()
+  # deucken1 - changed loop delay to 0.5 seconds to speed up data output
   time.sleep(0.5)
